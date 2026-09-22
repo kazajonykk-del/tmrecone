@@ -1,0 +1,1214 @@
+<!DOCTYPE html>
+<html lang="uz" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IT & Kompyuter Savodxonligi bo'yicha Onlayn Test</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#f0f9ff',
+                            100: '#e0f2fe',
+                            500: '#0ea5e9',
+                            600: '#0284c7',
+                            700: '#0369a1',
+                            900: '#0c4a6e',
+                        }
+                    },
+                    animation: {
+                        'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                        'float': 'float 6s ease-in-out infinite',
+                    },
+                    keyframes: {
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0px)' },
+                            '50%': { transform: 'translateY(-15px)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Canvas Confetti -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+    <style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #0b0f19;
+            color: #f3f4f6;
+            overflow-x: hidden;
+        }
+
+        /* Glassmorphism styling */
+        .glass-panel {
+            background: rgba(17, 24, 39, 0.7);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+        }
+
+        .glass-card {
+            background: rgba(30, 41, 59, 0.5);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .glass-card:hover {
+            border-color: rgba(14, 165, 233, 0.4);
+            transform: translateY(-4px);
+            box-shadow: 0 12px 24px -10px rgba(14, 165, 233, 0.3);
+        }
+
+        /* Animated ambient background spots */
+        .bg-glow-1 {
+            position: fixed;
+            top: -10%;
+            left: -10%;
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, rgba(14, 165, 233, 0.25) 0%, rgba(0,0,0,0) 70%);
+            border-radius: 50%;
+            z-index: -1;
+            filter: blur(60px);
+        }
+
+        .bg-glow-2 {
+            position: fixed;
+            bottom: -10%;
+            right: -10%;
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(139, 92, 246, 0.2) 0%, rgba(0,0,0,0) 70%);
+            border-radius: 50%;
+            z-index: -1;
+            filter: blur(80px);
+        }
+
+        /* Option buttons styling */
+        .option-btn {
+            position: relative;
+            overflow: hidden;
+            transition: all 0.25s ease;
+        }
+
+        .option-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.08), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .option-btn:hover::before {
+            left: 100%;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0f172a;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #334155;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #0ea5e9;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between relative selection:bg-brand-500 selection:text-white">
+
+    <!-- Ambient Animated Glow Backgrounds -->
+    <div class="bg-glow-1 animate-pulse-slow"></div>
+    <div class="bg-glow-2 animate-pulse-slow" style="animation-delay: 2s;"></div>
+
+    <!-- Top Navigation Header -->
+    <header class="w-full glass-panel sticky top-0 z-50 border-b border-gray-800 px-6 py-4">
+        <div class="max-w-7xl mx-auto flex justify-between items-center">
+            <div class="flex items-center gap-3 cursor-pointer" onclick="goToHome()">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-brand-600 to-indigo-600 flex items-center justify-center text-white font-bold text-xl shadow-lg shadow-brand-500/30">
+                    <i class="fa-solid fa-graduation-cap"></i>
+                </div>
+                <div>
+                    <h1 class="font-extrabold text-lg tracking-tight bg-gradient-to-r from-white via-gray-200 to-gray-400 bg-clip-text text-transparent">IT Quiz Test</h1>
+                    <p class="text-xs text-gray-400">Interaktiv Bilim Sinov Platformasi</p>
+                </div>
+            </div>
+
+            <div class="flex items-center gap-4">
+                <!-- Telegram Chat ID Settings Button -->
+                <button onclick="openAdminModal()" class="p-2.5 rounded-xl bg-gray-800/80 hover:bg-gray-700 text-gray-300 hover:text-white transition flex items-center gap-2 border border-gray-700/50 text-xs font-semibold">
+                    <i class="fa-paper-plane text-brand-500"></i>
+                    <span class="hidden sm:inline">Telegram Sozlama</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Dynamic Content Wrapper -->
+    <main class="max-w-5xl w-full mx-auto p-4 sm:p-6 my-auto z-10">
+
+        <!-- SCREEN 1: Registration & Subject Selection -->
+        <section id="screen-welcome" class="space-y-8 animate-fadeIn">
+            <div class="text-center space-y-4 max-w-2xl mx-auto">
+                <span class="px-4 py-1.5 rounded-full text-xs font-semibold bg-brand-500/10 text-brand-500 border border-brand-500/20 uppercase tracking-widest inline-block">
+                    200 ta Professional Test Savollari
+                </span>
+                <h2 class="text-3xl sm:text-5xl font-black text-white tracking-tight leading-tight">
+                    O'zingizni Sinab Ko'ring va <span class="bg-gradient-to-r from-brand-500 to-indigo-500 bg-clip-text text-transparent">Natijaga Eshinng!</span>
+                </h2>
+                <p class="text-gray-400 text-sm sm:text-base">
+                    Bo'limlardan birini tanlang yoki barcha toifalar bo'yicha bilimlaringizni sinovdan o'tkazing. Natijangiz avtomatik tarzda Telegramga yuboriladi.
+                </p>
+            </div>
+
+            <!-- Student Info Form -->
+            <div class="glass-panel p-6 sm:p-8 rounded-3xl max-w-xl mx-auto space-y-5">
+                <h3 class="text-lg font-bold text-white flex items-center gap-2 border-b border-gray-800 pb-3">
+                    <i class="fa-solid fa-user-gear text-brand-500"></i> Talaba Ma'lumotlari
+                </h3>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-medium text-gray-400 mb-1">Ismingiz *</label>
+                        <input type="text" id="user-firstname" placeholder="Masalan: Ali" class="w-full bg-gray-900/80 border border-gray-700/80 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-brand-500 transition">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-medium text-gray-400 mb-1">Familiyangiz *</label>
+                        <input type="text" id="user-lastname" placeholder="Masalan: Valiyev" class="w-full bg-gray-900/80 border border-gray-700/80 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-brand-500 transition">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quiz Category Cards -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                <!-- HTML Card -->
+                <div onclick="selectCategory('html')" class="glass-card p-6 rounded-2xl cursor-pointer group relative overflow-hidden border-t-2 border-t-orange-500">
+                    <div class="w-12 h-12 rounded-xl bg-orange-500/10 text-orange-500 flex items-center justify-center text-2xl font-bold mb-4 group-hover:scale-110 transition">
+                        <i class="fa-brands fa-html5"></i>
+                    </div>
+                    <h4 class="text-lg font-bold text-white mb-1">HTML5</h4>
+                    <p class="text-xs text-gray-400 mb-4">Savollar: 1 - 50</p>
+                    <span class="text-xs font-semibold text-orange-400 flex items-center gap-1 group-hover:gap-2 transition-all">
+                        Boshlash <i class="fa-solid fa-arrow-right"></i>
+                    </span>
+                </div>
+
+                <!-- CSS Card -->
+                <div onclick="selectCategory('css')" class="glass-card p-6 rounded-2xl cursor-pointer group relative overflow-hidden border-t-2 border-t-blue-500">
+                    <div class="w-12 h-12 rounded-xl bg-blue-500/10 text-blue-500 flex items-center justify-center text-2xl font-bold mb-4 group-hover:scale-110 transition">
+                        <i class="fa-brands fa-css3-alt"></i>
+                    </div>
+                    <h4 class="text-lg font-bold text-white mb-1">CSS3</h4>
+                    <p class="text-xs text-gray-400 mb-4">Savollar: 51 - 100</p>
+                    <span class="text-xs font-semibold text-blue-400 flex items-center gap-1 group-hover:gap-2 transition-all">
+                        Boshlash <i class="fa-solid fa-arrow-right"></i>
+                    </span>
+                </div>
+
+                <!-- Bootstrap Card -->
+                <div onclick="selectCategory('bootstrap')" class="glass-card p-6 rounded-2xl cursor-pointer group relative overflow-hidden border-t-2 border-t-purple-500">
+                    <div class="w-12 h-12 rounded-xl bg-purple-500/10 text-purple-500 flex items-center justify-center text-2xl font-bold mb-4 group-hover:scale-110 transition">
+                        <i class="fa-brands fa-bootstrap"></i>
+                    </div>
+                    <h4 class="text-lg font-bold text-white mb-1">Bootstrap 5</h4>
+                    <p class="text-xs text-gray-400 mb-4">Savollar: 101 - 150</p>
+                    <span class="text-xs font-semibold text-purple-400 flex items-center gap-1 group-hover:gap-2 transition-all">
+                        Boshlash <i class="fa-solid fa-arrow-right"></i>
+                    </span>
+                </div>
+
+                <!-- CS Card -->
+                <div onclick="selectCategory('cs')" class="glass-card p-6 rounded-2xl cursor-pointer group relative overflow-hidden border-t-2 border-t-emerald-500">
+                    <div class="w-12 h-12 rounded-xl bg-emerald-500/10 text-emerald-500 flex items-center justify-center text-2xl font-bold mb-4 group-hover:scale-110 transition">
+                        <i class="fa-solid fa-desktop"></i>
+                    </div>
+                    <h4 class="text-lg font-bold text-white mb-1">Kompyuter Savodxonligi</h4>
+                    <p class="text-xs text-gray-400 mb-4">Savollar: 151 - 200</p>
+                    <span class="text-xs font-semibold text-emerald-400 flex items-center gap-1 group-hover:gap-2 transition-all">
+                        Boshlash <i class="fa-solid fa-arrow-right"></i>
+                    </span>
+                </div>
+            </div>
+
+            <div class="text-center pt-2">
+                <button onclick="selectCategory('all')" class="px-8 py-4 rounded-2xl bg-gradient-to-r from-brand-600 to-indigo-600 hover:from-brand-500 hover:to-indigo-500 text-white font-bold shadow-lg shadow-brand-500/25 transition-all transform hover:-translate-y-0.5 active:translate-y-0">
+                    <i class="fa-solid fa-layer-group mr-2"></i> Barcha 200 ta Savoldan Aralash Test Boshlash
+                </button>
+            </div>
+        </section>
+
+
+        <!-- SCREEN 2: Active Test Execution -->
+        <section id="screen-quiz" class="hidden space-y-6">
+            <!-- Header bar for Timer & Progress -->
+            <div class="glass-panel p-5 rounded-2xl flex flex-wrap items-center justify-between gap-4">
+                <div class="flex items-center gap-3">
+                    <span id="quiz-badge" class="px-3 py-1 rounded-lg text-xs font-bold uppercase tracking-wider bg-brand-500/20 text-brand-400 border border-brand-500/30">
+                        HTML5
+                    </span>
+                    <span id="question-tracker" class="text-sm font-semibold text-gray-300">
+                        Savol: <strong class="text-white" id="current-q-num">1</strong> / <span id="total-q-num">50</span>
+                    </span>
+                </div>
+
+                <!-- Timer Display -->
+                <div class="flex items-center gap-2 bg-gray-900/90 border border-gray-700/60 px-4 py-2 rounded-xl text-brand-400 font-mono font-bold text-lg shadow-inner">
+                    <i class="fa-regular fa-clock animate-spin" style="animation-duration: 8s;"></i>
+                    <span id="timer-display">20:00</span>
+                </div>
+            </div>
+
+            <!-- Progress Bar -->
+            <div class="w-full bg-gray-800 rounded-full h-2.5 overflow-hidden p-0.5 border border-gray-700/50">
+                <div id="progress-bar" class="bg-gradient-to-r from-brand-500 to-indigo-500 h-full rounded-full transition-all duration-300" style="width: 0%"></div>
+            </div>
+
+            <!-- Question Card -->
+            <div class="glass-panel p-6 sm:p-10 rounded-3xl space-y-8 relative overflow-hidden">
+                <div id="question-text" class="text-xl sm:text-2xl font-bold text-white leading-relaxed">
+                    Savol yuklanmoqda...
+                </div>
+
+                <!-- Options Grid -->
+                <div id="options-container" class="grid grid-cols-1 gap-3.5">
+                    <!-- Dynamic Options Inserted Here -->
+                </div>
+
+                <!-- Navigation Controls -->
+                <div class="flex items-center justify-between pt-4 border-t border-gray-800/80">
+                    <button id="prev-btn" onclick="navigateQuestion(-1)" class="px-5 py-2.5 rounded-xl bg-gray-800 hover:bg-gray-700 text-gray-300 font-semibold text-sm transition disabled:opacity-30 disabled:cursor-not-allowed flex items-center gap-2">
+                        <i class="fa-solid fa-chevron-left"></i> Oldingisi
+                    </button>
+                    
+                    <button id="next-btn" onclick="navigateQuestion(1)" class="px-6 py-2.5 rounded-xl bg-brand-600 hover:bg-brand-500 text-white font-semibold text-sm transition shadow-lg shadow-brand-500/20 flex items-center gap-2">
+                        Keyingisi <i class="fa-solid fa-chevron-right"></i>
+                    </button>
+
+                    <button id="finish-btn" onclick="confirmFinishQuiz()" class="hidden px-6 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-semibold text-sm transition shadow-lg shadow-emerald-500/20 flex items-center gap-2">
+                        <i class="fa-solid fa-check-double"></i> Yakunlash
+                    </button>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- SCREEN 3: Results & Certificate Preview -->
+        <section id="screen-results" class="hidden space-y-8 animate-fadeIn">
+            <div class="glass-panel p-8 sm:p-12 rounded-3xl text-center space-y-6 relative overflow-hidden">
+                <div class="w-20 h-20 rounded-3xl bg-brand-500/20 text-brand-400 border border-brand-500/30 flex items-center justify-center text-4xl mx-auto shadow-xl">
+                    <i class="fa-solid fa-trophy"></i>
+                </div>
+
+                <div>
+                    <h2 class="text-3xl font-black text-white">Test Yakunlandi!</h2>
+                    <p id="result-user-fullname" class="text-lg text-brand-400 font-semibold mt-1">Ali Valiyev</p>
+                </div>
+
+                <!-- Result Stats Grid -->
+                <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 max-w-2xl mx-auto pt-2">
+                    <div class="glass-card p-4 rounded-2xl">
+                        <span class="text-xs text-gray-400 block mb-1">Jami Savollar</span>
+                        <span id="res-total" class="text-2xl font-extrabold text-white">0</span>
+                    </div>
+                    <div class="glass-card p-4 rounded-2xl">
+                        <span class="text-xs text-gray-400 block mb-1">To'g'ri Javoblar</span>
+                        <span id="res-correct" class="text-2xl font-extrabold text-emerald-400">0</span>
+                    </div>
+                    <div class="glass-card p-4 rounded-2xl">
+                        <span class="text-xs text-gray-400 block mb-1">Xatolar</span>
+                        <span id="res-wrong" class="text-2xl font-extrabold text-rose-400">0</span>
+                    </div>
+                    <div class="glass-card p-4 rounded-2xl">
+                        <span class="text-xs text-gray-400 block mb-1">Natija Foizi</span>
+                        <span id="res-percent" class="text-2xl font-extrabold text-brand-400">0%</span>
+                    </div>
+                </div>
+
+                <!-- Telegram Notification Status Indicator -->
+                <div id="telegram-status" class="inline-flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-semibold bg-gray-800 text-gray-300 border border-gray-700">
+                    <i class="fa-solid fa-spinner animate-spin text-brand-500"></i> Natijalar Telegramga yuborilmoqda...
+                </div>
+
+                <div class="flex flex-wrap items-center justify-center gap-4 pt-4">
+                    <button onclick="reviewAnswers()" class="px-6 py-3 rounded-xl bg-gray-800 hover:bg-gray-700 text-white font-bold text-sm transition flex items-center gap-2">
+                        <i class="fa-solid fa-list-check text-brand-400"></i> Javoblar Tahlili
+                    </button>
+                    <button onclick="goToHome()" class="px-6 py-3 rounded-xl bg-brand-600 hover:bg-brand-500 text-white font-bold text-sm transition shadow-lg shadow-brand-500/20 flex items-center gap-2">
+                        <i class="fa-solid fa-rotate-right"></i> Qaytadan Boshlash
+                    </button>
+                </div>
+            </div>
+
+            <!-- Detailed Answers Review Container -->
+            <div id="review-container" class="hidden glass-panel p-6 sm:p-8 rounded-3xl space-y-6">
+                <h3 class="text-xl font-bold text-white flex items-center gap-2 border-b border-gray-800 pb-4">
+                    <i class="fa-solid fa-magnifying-glass-chart text-brand-500"></i> Savollar va Javoblar Tahlili
+                </h3>
+                <div id="review-list" class="space-y-4">
+                    <!-- Dynamic Review Cards -->
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="w-full text-center py-6 text-xs text-gray-500 border-t border-gray-900 z-10">
+        &copy; 2026 IT Quiz Platform. Barcha huquqlar himoyalangan.
+    </footer>
+
+
+    <!-- MODAL: Telegram Settings Modal -->
+    <div id="admin-modal" class="fixed inset-0 bg-black/70 backdrop-blur-md z-50 flex items-center justify-center p-4 hidden">
+        <div class="glass-panel max-w-md w-full p-6 sm:p-8 rounded-3xl space-y-5 relative">
+            <button onclick="closeAdminModal()" class="absolute top-4 right-4 text-gray-400 hover:text-white p-2">
+                <i class="fa-solid fa-xmark text-lg"></i>
+            </button>
+
+            <h3 class="text-xl font-bold text-white flex items-center gap-2">
+                <i class="fa-brands fa-telegram text-brand-500"></i> Telegram Integratsiya
+            </h3>
+            <p class="text-xs text-gray-400">
+                Natijalar kelib tushishi uchun bot tokeni va Chat ID belgilangan bo'lishi kerak.
+            </p>
+
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-xs font-medium text-gray-400 mb-1">Bot Token (Kodda biriktirilgan)</label>
+                    <input type="text" id="cfg-token" readonly class="w-full bg-gray-900/90 border border-gray-800 rounded-xl px-4 py-2.5 text-xs text-gray-400 font-mono">
+                </div>
+
+                <div>
+                    <label class="block text-xs font-medium text-gray-400 mb-1">Telegram Chat ID *</label>
+                    <input type="text" id="cfg-chatid" placeholder="Masalan: 123456789" class="w-full bg-gray-900 border border-gray-700 rounded-xl px-4 py-2.5 text-sm text-white focus:border-brand-500 outline-none font-mono">
+                    <p class="text-[10px] text-gray-500 mt-1">O'zingizning Chat ID raqamingizni kiriting (@userinfobot orqali bilish mumkin).</p>
+                </div>
+            </div>
+
+            <div class="pt-2 flex justify-end gap-3">
+                <button onclick="closeAdminModal()" class="px-4 py-2 rounded-xl bg-gray-800 hover:bg-gray-700 text-xs font-semibold text-gray-300">Bekor qilish</button>
+                <button onclick="saveAdminSettings()" class="px-5 py-2 rounded-xl bg-brand-600 hover:bg-brand-500 text-xs font-semibold text-white shadow-lg shadow-brand-500/20">Saqlash</button>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- JAVASCRIPT LOGIC -->
+    <script>
+        // HARDCODED TELEGRAM BOT TOKEN
+        const BOT_TOKEN = "8793822355:AAF9f_wYIMu_GLJbtmtbnj_Gg-FMSC4z_5E";
+        let CHAT_ID = localStorage.getItem("quiz_chat_id") || "";
+
+        // STATE VARIABLES
+        let questions = [];
+        let currentQuestionIdx = 0;
+        let userAnswers = {}; // { qIdx: selectedOptionIdx }
+        let timerInterval = null;
+        let timeLeft = 0; // seconds
+        let currentCategory = 'all';
+
+        // 200 QUESTION DATABASE (HTML 1-50, CSS 51-100, Bootstrap 101-150, CS 151-200)
+        const RAW_QUESTIONS = [
+            // HTML (1-50)
+            ...Array.from({ length: 50 }, (_, i) => ({
+                id: i + 1,
+                category: 'html',
+                question: `HTML - Savol ${i + 1}: ${
+                    [
+                        "HTML nimaning qisqartmasi?",
+                        "Veb-sahifaning sarlavhasini qaysi teg belgilaydi?",
+                        "Qaysi teg yordamida matnni to'q (bold) qilish mumkin?",
+                        "Rasm joylashtirish uchun qaysi teglardan foydalaniladi?",
+                        "Havola (link) yaratish uchun qaysi teg ishlatiladi?",
+                        "HTMLda eng katta sarlavha tegi qaysi?",
+                        "Tartibsiz ro'yxat yaratish uchun qaysi teg ishlatiladi?",
+                        "Tartibli ro'yxat yaratish tegi qaysi?",
+                        "Ro'yxat elementlari qaysi teg ichida yoziladi?",
+                        "Jadval yaratish uchun qaysi teg ishlatiladi?",
+                        "Jadvaldagi qatorni yaratish tegi qaysi?",
+                        "Jadval katagini belgilash tegi qaysi?",
+                        "Forma yaratish uchun qaysi teg ishlatiladi?",
+                        "Matn kiritish maydoni uchun qaysi teg ishlatiladi?",
+                        "Tugma yaratish uchun qaysi teg ishlatiladi?",
+                        "Aylana shaklidagi tanlov (radio button) attribute tipi nima?",
+                        "Ko'p qatorli matn kiritish maydoni tegi qaysi?",
+                        "HTML5 da video joylashtirish tegi qaysi?",
+                        "HTML5 da audio fayl joylashtirish tegi qaysi?",
+                        "HTML hujjati qaysi deklaratsiya bilan boshlanadi?",
+                        "Sahifa meta-ma'lumotlari qaysi teg ichida joylashadi?",
+                        "Fayl kodirovkasini ko'rsatuvchi meta teg qaysi?",
+                        "CSS faylini HTMLga ulash uchun qaysi teg ishlatiladi?",
+                        "JavaScript faylini ulash uchun qaysi teg ishlatiladi?",
+                        "HTMLda izoh (comment) qanday yoziladi?",
+                        "Yangi qatorga o'tish uchun qaysi yopiqsiz teg ishlatiladi?",
+                        "Gartizontal chiziq tortish tegi qaysi?",
+                        "Semantik HTML5 tegi bo'lgan navigatsiya qaysi?",
+                        "Sahifa pastki qismi (footer) tegi qaysi?",
+                        "Sahifa yuqori qismi (header) tegi qaysi?",
+                        "Asosiy content bo'limi tegi qaysi?",
+                        "Yon panel uchun qaysi HTML5 semantik tegi ishlatiladi?",
+                        "Inline elementni ko'rsating:",
+                        "Block-level elementni ko'rsating:",
+                        "Input elementining to'ldirilishi shartligini ko'rsatuvchi atribut?",
+                        "Rasm yuklanmay qolganda alternativ matn atributi qaysi?",
+                        "Havolani yangi oynada ochish atributi qaysi?",
+                        "Drop-down (ochiladigan menyu) tegi qaysi?",
+                        "Drop-down varianti tegi qaysi?",
+                        "HTMLda &nbsp; nimani bildiradi?",
+                        "Formani yuborish metodlari qaysilar?",
+                        "Formadagi ma'lumotlarni yuborish tugmasi type atributi?",
+                        "Matn ostiga chizish tegi qaysi?",
+                        "Matn ustidan chizish (strike) tegi qaysi?",
+                        "HTML5 canvas tegi nimaga xizmat qiladi?",
+                        "HTML5 da svg nima?",
+                        "Iframe tegi nimaga xizmat qiladi?",
+                        "Formadagi qiymatni tozalash tugmasi type atributi?",
+                        "HTML hujjating ildiz (root) tegi qaysi?",
+                        "Teg ichiga uslub (style) yozish usuli nima deyiladi?"
+                    ][i % 50]
+                }`,
+                options: [
+                    ["Hyper Text Markup Language", "High Tech Modern Language", "Hyperlink Text Mode Language", "Home Tool Markup Language"],
+                    ["<title>", "<head>", "<header>", "<meta>"],
+                    ["<b> yoki <strong>", "<i>", "<p>", "<span>"],
+                    ["<img>", "<picture>", "<image>", "<src>"],
+                    ["<a>", "<link>", "<href>", "<url>"],
+                    ["<h1>", "<h6>", "<header>", "<head>"],
+                    ["<ul>", "<ol>", "<li>", "<list>"],
+                    ["<ol>", "<ul>", "<li>", "<dl>"],
+                    ["<li>", "<list>", "<item>", "<ol>"],
+                    ["<table>", "<tab>", "<grid>", "<tr>"],
+                    ["<tr>", "<td>", "<th>", "<row>"],
+                    ["<td>", "<tr>", "<th>", "<cell>"],
+                    ["<form>", "<input>", "<select>", "<data>"],
+                    ["<input>", "<text>", "<field>", "<entry>"],
+                    ["<button>", "<btn>", "<submit>", "<click>"],
+                    ['type="radio"', 'type="checkbox"', 'type="circle"', 'type="select"'],
+                    ["<textarea>", "<input type='text'>", "<textbox>", "<text>"],
+                    ["<video>", "<media>", "<movie>", "<embed>"],
+                    ["<audio>", "<sound border>", "<music>", "<voice>"],
+                    ["<!DOCTYPE html>", "<html>", "<head>", "<xml>"],
+                    ["<head>", "<body>", "<section>", "<main>"],
+                    ['<meta charset="UTF-8">', '<meta lang="uz">', '<meta code="utf8">', '<meta name="utf">'],
+                    ["<link rel='stylesheet' href='...'>", "<style src='...'>", "<css href='...'>", "<script src='...'>"],
+                    ["<script src='...'>", "<js file='...'>", "<link js='...'>", "<code src='...'>"],
+                    ["<!-- Izoh -->", "// Izoh", "/* Izoh */", "' Izoh"],
+                    ["<br>", "<hr>", "<lb>", "<break>"],
+                    ["<hr>", "<br>", "<line>", "<border>"],
+                    ["<nav>", "<navbar>", "<navigation>", "<menu>"],
+                    ["<footer>", "<bottom>", "<end>", "<aside>"],
+                    ["<header>", "<top>", "<head>", "<banner>"],
+                    ["<main>", "<content>", "<section>", "<body>"],
+                    ["<aside font>", "<sidebar>", "<nav>", "<section>"],
+                    ["<span>", "<div>", "<p>", "<h1>"],
+                    ["<div>", "<span>", "<a>", "<b>"],
+                    ["required", "needed", "important", "must"],
+                    ["alt", "title", "src", "description"],
+                    ['target="_blank"', 'target="_new"', 'open="blank"', 'window="new"'],
+                    ["<select>", "<dropdown>", "<option>", "<list>"],
+                    ["<option>", "<item>", "<select-item>", "<val>"],
+                    ["Probel (bo'sh joy)", "Yangi qator", "Tab belgisi", "Tenglik belgisi"],
+                    ["GET va POST", "FETCH va PUSH", "READ va WRITE", "SEND va RECEIVE"],
+                    ['type="submit"', 'type="button"', 'type="send"', 'type="post"'],
+                    ["<u> yoki <ins>", "<i>", "<s>", "<b>"],
+                    ["<s> yoki <del>", "<u>", "<i>", "<sub>"],
+                    ["2D va grafiklar chizish", "Video pleyer", "Audio ijro etish", "3D o'yinlar"],
+                    ["Vektorli grafika", "Rastrli rasm", "Shrift turi", "Audio formati"],
+                    ["Boshqa sahifani joylashtirish", "Rasm chiqarish", "Forma ulash", "Kodni ishlatish"],
+                    ['type="reset"', 'type="clear"', 'type="delete"', 'type="remove"'],
+                    ["<html>", "<body>", "<head>", "<doctype>"],
+                    ["Inline style", "External style", "Internal style", "Import style"]
+                ][i % 50],
+                correct: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0][i % 50]
+            })),
+
+            // CSS (51-100)
+            ...Array.from({ length: 50 }, (_, i) => ({
+                id: i + 51,
+                category: 'css',
+                question: `CSS - Savol ${i + 51}: ${
+                    [
+                        "CSS nimaning qisqartmasi?",
+                        "Matn rangini o'zgartirish CSS xossasi qaysi?",
+                        "Fon rangini o'zgartirish CSS xossasi qaysi?",
+                        "Element chegarasini belgilash xossasi?",
+                        "Element ichki masofasi (padding) nima?",
+                        "Element tashqi masofasi (margin) nima?",
+                        "CSSda id selektori qaysi belgi bilan yoziladi?",
+                        "CSSda class selektori qaysi belgi bilan yoziladi?",
+                        "Font o'lchamini o'zgartirish xossasi?",
+                        "Matnni o'rtaga tekislash (center) xossasi?",
+                        "Display: flex nimaga xizmat qiladi?",
+                        "Display: grid nimaga xizmat qiladi?",
+                        "Elementni ko'rinmas qilish (lekin joyi qoladi) xossasi?",
+                        "Elementni mutlaq ko'rinmas qilish (joyi ham yo'qoladi)?",
+                        "Z-index xossasi nimani belgilaydi?",
+                        "Position: absolute nimani bildiradi?",
+                        "Position: fixed nimani bildiradi?",
+                        "CSSda izoh (comment) qanday yoziladi?",
+                        "Font oilasini belgilash xossasi?",
+                        "Matnni bosh harflarga o'tkazish xossasi?",
+                        "Soya effekti berish xossasi?",
+                        "Opasitiya (shaffoflik) xossasi qaysi?",
+                        "Transition xossasi nimaga xizmat qiladi?",
+                        "Hover vaqtidagi uslub qanday yoziladi?",
+                        "Media query nimaga xizmat qiladi?",
+                        "Flexboxda elementlarni gorizontal tekislash?",
+                        "Flexboxda elementlarni vertikal tekislash?",
+                        "CSS o'zgaruvchilari qanday e'lon qilinadi?",
+                        "Box-sizing: border-box nima qiladi?",
+                        "Max-width xossasining afzalligi nima?",
+                        "Background-image xossasi sinf sintaksisi?",
+                        "Rem va Em birliklari o'rtasidagi farq?",
+                        "CSS pseudo-element hisoblanadi:",
+                        "CSS pseudo-class hisoblanadi:",
+                        "Overflow: hidden nima qiladi?",
+                        "Cursor: pointer nima qiladi?",
+                        "Flex-direction default qiymati nima?",
+                        "Grid-template-columns nimani belgilaydi?",
+                        "Calc() funksiyasi nimaga xizmat qiladi?",
+                        "Transform: scale(1.2) nima qiladi?",
+                        "Transform: rotate(45deg) nima qiladi?",
+                        "Animation-duration nimani bildiradi?",
+                        "@keyframes nimaga ishlatiladi?",
+                        "CSS specificity bo'yicha eng yuqori ustunlik?",
+                        "Vh va Vw birliklari nimani bildiradi?",
+                        "Border-radius nimaga xizmat qiladi?",
+                        "Letter-spacing xossasi nima qiladi?",
+                        "Line-height xossasi nima qiladi?",
+                        "List-style: none nima qiladi?",
+                        "Import buyrug'i CSSda qanday ishlatiladi?"
+                    ][i % 50]
+                }`,
+                options: [
+                    ["Cascading Style Sheets", "Creative Style System", "Computer Style Sheets", "Color Style Syntax"],
+                    ["color", "text-color", "font-color", "rgb-color"],
+                    ["background-color", "bg-color", "color-bg", "surface-color"],
+                    ["border", "outline", "stroke", "border-line"],
+                    ["Konteynerdan elementgacha bo'lgan ichki joy", "Tashqi chegara masofasi", "Chegara qalinligi font", "Soya o'lchami"],
+                    ["Element atrofidagi tashqi bo'sh joy", "Ichki masofa", "Chegara kengligi", "Matn oralig'i"],
+                    ["# (Hashtag)", ". (Nuqta)", "* (Yulduzcha)", "@ (At)"],
+                    [". (Nuqta)", "# (Hashtag)", "$ (Dollar)", ": (Ikki nuqta)"],
+                    ["font-size", "text-size", "font-weight", "size"],
+                    ["text-align: center", "align-text: center", "font-align: center", "text-center: true"],
+                    ["Egaruvchan 1D tartib berish (Flexbox)", "2D jadval tartibi", "Faqat blok qilish", "Matn joylashuvi"],
+                    ["2D (ustun va qator) katakli tartib berish", "Faqat gorizontal joylashuv", "3D animatsiya", "Rasmlarni joylash"],
+                    ["visibility: hidden", "display: none", "opacity: 1", "filter: blur()"],
+                    ["display: none", "visibility: hidden", "opacity: 0", "clear: both"],
+                    ["Elementlarning ustma-ust taxlanish tartibi", "Kenglik ko'rsatkichini", "Shaffoflik darajasi", "Masshtab o'lchami"],
+                    ["Ota-elementga nisbatan absolut joylashuv", "Ekranga yopishib turish", "Nisbiy joylashuv", "Statik joylashuv"],
+                    ["Ekranning o'ziga nisbatan qotirilgan joylashuv", "Normallashgan joylashuv", "Ota-elementga nisbatan", "Aralash joylashuv"],
+                    ["/* Izoh */", "<!-- Izoh -->", "// Izoh", "# Izoh"],
+                    ["font-family", "font-type", "font-name", "font-style"],
+                    ["text-transform: uppercase", "font-case: upper", "text-style: capital", "text-upper: true"],
+                    ["box-shadow / text-shadow", "border-shadow", "shadow-effect", "element-shadow"],
+                    ["opacity", "transparent", "filter-blur", "shading"],
+                    ["Silliq o'tish animatsiyasini yaratish", "Rangni o'zgartirish", "Joylashuvni o'zgartirish", "Fontni o'zgartirish"],
+                    ["a:hover { ... }", "a.hover { ... }", "a(hover) { ... }", "a#hover { ... }"],
+                    ["Moslashuvchan (responsive) dizayn yaratish", "Media fayllarni yuklash", "Video o'ynatish", "Animatsiya qilish"],
+                    ["justify-content", "align-items", "flex-wrap", "align-content font"],
+                    ["align-items", "justify-content", "flex-direction", "grid-align"],
+                    ["--variable-name: value;", "$variable-name: value;", "@variable: value;", "var-name: value;"],
+                    ["Chegara va paddingni element o'lchamiga kiritish", "Elementni kattalashtirish", "Paddingni o'chirish", "Marginni qo'shish"],
+                    ["Kenglik ko'rsatilgan qiymatdan oshmaydi", "Doim qat'iy o'lchamda turadi", "Ekran kichiklashsa yo'qoladi", "Kattalashib ketadi"],
+                    ["background-image: url('file.jpg');", "background-image: 'file.jpg';", "bg: image('file.jpg');", "src: url('file.jpg');"],
+                    ["Rem - root elementga, Em - ota elementga nisbatan", "Ikkalasi bir xil", "Em - px da, Rem - % da", "Rem - faqat mobilda"],
+                    ["::before va ::after", ":hover va :active", "#id va .class", "div va span"],
+                    [":hover va :focus", "::before va ::after", "@media", "calc()"],
+                    ["Toshib chiqqan qismni yashirish", "Aylantirish chizig'ini chiqarish", "Elementni kattalashtirish", "Fonni qoraytirish"],
+                    ["Sichqoncha kursori ko'rsatkich (qo'lcha) bo'ladi", "Kursor yo'qoladi", "Kursor text belgisiga o'tadi", "Kursor aylanadi"],
+                    ["row", "column", "row-reverse", "column-reverse"],
+                    ["Grid ustunlarining soni va o'lchamlarini", "Grid balandligini", "Chegara qalinligini", "Elementlar orasidagi masofani"],
+                    ["Matematik hisob-kitoblarni bajarish", "Animatsiya hosil qilish", "Ranglarni hisoblash", "Shrift tanlash"],
+                    ["Elementni 1.2 barobar kattalashtiradi", "Elementni buradi", "Elementni siljitadi", "Shaffof qiladi"],
+                    ["Elementni 45 darajaga buradi", "45px ga siljitadi", "45% kattalashtiradi", "45 daraja qiyaslaydi"],
+                    ["Animatsiya davomiyligi vaqtini", "Animatsiya takrorlanishini", "Animatsiya kechikishini", "Animatsiya nomini"],
+                    ["Animatsiya bosqichlarini (frames) belgilash", "Media query yozish", "Shrift yuklash", "Modul ulash"],
+                    ["!important va Inline style", "Class selector", "ID selector", "Tag selector"],
+                    ["Viewport Height (bo'yi) va Viewport Width (eni)", "Vector Height", "Virtual Hour", "Variable Height"],
+                    ["Burchaklarni yumaloqlashtirish", "Chegara qalinligi", "Soya radiusi", "Aylana chizish"],
+                    ["Harflar orasidagi masofa", "So'zlar orasidagi masofa", "Qatorlar balandligi", "Matn o'lchami"],
+                    ["Qatorlar orasidagi masofa (balandlik)", "Harflar masofasi", "Shrift qalinligi", "Abzas masofasi"],
+                    ["Ro'yxat markerlarini (nuqtalarni) olib tashlash", "Ro'yxatni gorizontal qilish", "Raqamlash", "Shriftni o'chirish"],
+                    ["@import url('style.css');", "#import 'style.css';", "import('style.css');", "<import src='style.css'>"]
+                ][i % 50],
+                correct: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0][i % 50]
+            })),
+
+            // Bootstrap 5 (101-150)
+            ...Array.from({ length: 50 }, (_, i) => ({
+                id: i + 101,
+                category: 'bootstrap',
+                question: `Bootstrap 5 - Savol ${i + 101}: ${
+                    [
+                        "Bootstrap nima?",
+                        "Bootstrap 5 da qaysi kutubxonaga bog'liqlik (jQuery) olib tashlandi?",
+                        "Bootstrap grid sistemasi nechta ustunga bo'lingan?",
+                        "Container klassi nimaga xizmat qiladi?",
+                        "Container-fluid va Container o'rtasidagi farq?",
+                        "Bootstrap 5 da eng kichik breakpoint (ekran) klassi?",
+                        "Moslashuvchan (responsive) ustun yaratish klassi?",
+                        "Matnni o'rtaga tekislash uchun qaysi klass ishlatiladi?",
+                        "Asosiy ko'k rangli tugma klassi qaysi?",
+                        "Muvaffaqiyatli (yashil) rang klassi qaysi?",
+                        "Xavf/Xatolik (qizil) rang klassi qaysi?",
+                        "Ogohlantirish (sariq) rang klassi qaysi?",
+                        "Bootstrap 5 da padding-top 3 berish klassi?",
+                        "Bootstrap 5 da margin-bottom 4 berish klassi?",
+                        "Bootstrap 5 da x-o'qi (chap va o'ng) bo'yicha margin?",
+                        "Bootstrap 5 da y-o'qi (yuqori va past) bo'yicha padding?",
+                        "Display: flex berish klassi Bootstrapda qanday?",
+                        "Flex elementlarini o'rtaga gorizontal tekislash klassi?",
+                        "Flex elementlarini o'rtaga vertikal tekislash klassi?",
+                        "Kard (Card) komponenti asosiy klassi?",
+                        "Modal oynasi ochilishi uchun atribut?",
+                        "Navbar (Navigatsiya) komponenti klassi?",
+                        "Bootstrap 5 da jadval stili klassi?",
+                        "Jadvalni responsive qilish klassi?",
+                        "Forma kiritish maydoni (input) stili klassi?",
+                        "Forma tanlov chekboxi klassi?",
+                        "Badj (Badge) yaratish klassi?",
+                        "Progress bar komponenti klassi?",
+                        "Alert (Ogohlantirish xabari) klassi?",
+                        "Spinner (Yuklanish indikatori) klassi?",
+                        "Matn rangini o'zgartirish: Primary matn?",
+                        "Fon rangini o'zgartirish: Dark fon?",
+                        "Tugmani ramkali (outline) qilish klassi?",
+                        "Katta tugma (Large button) klassi?",
+                        "Kichik tugma (Small button) klassi?",
+                        "Burchaklarni yumaloq qilish klassi?",
+                        "Aylana shaklidagi rasm yoki element klassi?",
+                        "Soya berish klassi (Shadow)?",
+                        "Matnni to'q (bold) qilish klassi?",
+                        "Elementni yashirish klassi (display: none)?",
+                        "Faqat katta ekranda ko me'da ko'rinadigan qilish?",
+                        "Accordion (Ochildi-yopildi) komponenti?",
+                        "Dropdown (Ochilib tushuvchi menyu) klassi?",
+                        "Tooltip yaratish qaysi JavaScript bilan ishlaydi?",
+                        "Bootstrap 5 CSS CDN ulash tegi qaysi?",
+                        "Offcanvas komponenti nima uchun ishlatiladi?",
+                        "Bootstrap 5 da Gutters (g-*) nima?",
+                        "Carousel komponenti nimaga xizmat qiladi?",
+                        "Toast komponenti nima?",
+                        "Bootstrap 5 versiyasida qaysi yangi utilita qo'shildi?"
+                    ][i % 50]
+                }`,
+                options: [
+                    ["Ochiq kodli mashhur CSS va UI karkasi (framework)", "JavaScript kutubxonasi", "Ma'lumotlar bazasi", "Dasturlash tili"],
+                    ["jQuery", "Popper.js", "React", "Vue"],
+                    ["12 ta ustun", "10 ta ustun", "6 ta ustun", "16 ta ustun"],
+                    ["Contentni ekranning o'rtasiga chegaralab joylash", "Rasmlarni o'lchash", "Rang berish", "Animatsiya qilish"],
+                    ["Container-fluid doim 100% enni egallaydi", "Container-fluid kichikroq", "Farqi yo'q", "Container mobil uchun"],
+                    ["col- (Extra small <576px)", "col-sm-", "col-md-", "col-lg-"],
+                    ["col-md-6", "grid-6", "flex-6", "column-6"],
+                    ["text-center", "align-center", "text-middle", "content-center font"],
+                    ["btn btn-primary", "btn btn-blue", "btn btn-main", "btn btn-info"],
+                    ["bg-success / text-success / btn-success", "bg-green", "bg-ok", "bg-positive"],
+                    ["bg-danger / text-danger / btn-danger", "bg-red", "bg-error", "bg-warning"],
+                    ["bg-warning", "bg-yellow", "bg-alert", "bg-caution"],
+                    ["pt-3", "pad-top-3", "p-top-3", "m-top-3"],
+                    ["mb-4", "pb-4", "margin-b-4", "m-bottom-4"],
+                    ["mx-*", "my-*", "px-*", "py-*"],
+                    ["py-*", "px-*", "my-*", "mx-*"],
+                    ["d-flex", "display-flex", "flex-box", "show-flex"],
+                    ["justify-content-center", "align-items-center", "text-center", "flex-center"],
+                    ["align-items-center", "justify-content-center", "content-center", "v-center"],
+                    ["card", "panel", "box", "block"],
+                    ['data-bs-toggle="modal"', 'data-toggle="modal"', 'open="modal"', 'show="modal"'],
+                    ["navbar", "nav-bar", "navigation", "header-nav"],
+                    ["table", "grid-table", "bootstrap-table", "tbl"],
+                    ["table-responsive", "table-fluid", "table-auto", "table-scroll"],
+                    ["form-control", "input-control", "form-input", "control-style"],
+                    ["form-check-input", "form-checkbox", "input-check", "select-check"],
+                    ["badge", "tag", "label", "chip"],
+                    ["progress", "loading-bar", "status-bar", "meter"],
+                    ["alert", "notification", "message", "toast-alert"],
+                    ["spinner-border", "loader", "loading-icon", "circle-load"],
+                    ["text-primary", "color-primary", "font-primary", "primary-text"],
+                    ["bg-dark", "background-dark", "dark-bg", "color-dark"],
+                    ["btn-outline-primary", "btn-border-primary", "btn-stroke", "btn-line"],
+                    ["btn-lg", "btn-large", "btn-big", "btn-max"],
+                    ["btn-sm", "btn-small", "btn-mini", "btn-low"],
+                    ["rounded", "border-radius", "circle", "corner"],
+                    ["rounded-circle", "rounded-full", "circle-img", "img-circle"],
+                    ["shadow", "box-shadow", "elevation", "drop-shadow"],
+                    ["fw-bold", "font-bold", "text-bold", "weight-bold"],
+                    ["d-none", "display-none", "hide", "hidden"],
+                    ["d-none d-lg-block", "d-block d-sm-none", "show-lg", "visible-lg"],
+                    ["accordion", "collapse-list", "dropdown-group", "expand-card"],
+                    ["dropdown", "select-menu", "drop-menu", "popover"],
+                    ["Popper.js", "jQuery", "Bootstrap Core native", "Axios"],
+                    ["<link rel='stylesheet' href='...bootstrap.min.css'>", "<script src='bootstrap.css'>", "<style bootstrap>", "<import css>"],
+                    ["Yon tarafdan chiquvchi panellar (slide menu)", "Modal oyna", "Xabarnoma", "Jadval"],
+                    ["Ustunlar va qatorlar orasidagi bo'shliq masofasi (Gaps)", "Chegara ramkalari", "Shriftlar", "Ranglar"],
+                    ["Rasmlar va kontent slayderi (Carousel)", "Xabarlar oynasi", "Progress paneli", "Menyu"],
+                    ["Kichik suzuvchi xabarnoma darchasi", "Katta modal", "Tugma varianti", "Rasm formati"],
+                    ["API Utilities va CSS variables qo'llab-quvvatlovi", "jQuery ulagichi", "Flash player", "Sass o'rniga Less"]
+                ][i % 50],
+                correct: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0][i % 50]
+            })),
+
+            // Kompyuter Savodxonligi (151-200)
+            ...Array.from({ length: 50 }, (_, i) => ({
+                id: i + 151,
+                category: 'cs',
+                question: `Kompyuter Savodxonligi - Savol ${i + 151}: ${
+                    [
+                        "Kompyuterning asosiy miyasi hisoblangan qurilma qaysi?",
+                        "Tezkor xotira (vaqtinchalik xotira) nima deyiladi?",
+                        "Doimiy xotira (ma'lumotlar saqlanadigan disk) qaysi?",
+                        "Klaviatura qanday qurilmalar turiga kiradi?",
+                        "Monitor qanday qurilmalar turiga kiradi?",
+                        "Matn va fayllarni nusxalash klaviatura tugmalari birikmasi?",
+                        "Nusxalangan obyektni joylashtirish (paste) birikmasi?",
+                        "Barcha obyektlarni belgilash (Select All) birikmasi?",
+                        "Amalni bekor qilish (Undo) birikmasi?",
+                        "Nusxa olish o'rniga qirqib olish (Cut) birikmasi?",
+                        "Operatsion tizimga misol bo'la oladi:",
+                        "Fayl kengaytmasi .docx qaysi dasturga tegishli?",
+                        "Fayl kengaytmasi .xlsx qaysi dasturga tegishli?",
+                        "Fayl kengaytmasi .pptx qaysi dasturga tegishli?",
+                        "1 Kilobayt (KB) nechta Baytga teng?",
+                        "1 Megabayt (MB) nechta Kilobaytga teng?",
+                        "1 Gigabayt (GB) nechta Megabaytga teng?",
+                        "Axborotning eng kichik o'lchov birligi nima?",
+                        "1 Bayt nechta Bitdan iborat?",
+                        "Brauzerga misol bo'la oladi:",
+                        "Qidiruv tizimiga (Search Engine) misol:",
+                        "Zararli dasturlardan himoyalovchi dastur turi?",
+                        "Internet tarmog'iga ulanish qurilmasi?",
+                        "BIOS qayerda joylashgan bo'ladi?",
+                        "SSD va HDD o'rtasidagi asosiy farq nima?",
+                        "Faylni butunlay (korzinaga tushirmasdan) o'chirish?",
+                        "Ekran rasmini (Screenshot) olish tugmasi?",
+                        "Kompyuterni qayta yuklash (Reboot) birikmasi?",
+                        "PDF formati nimaga mo'ljallangan?",
+                        "Zip yoki RAR fayllar nima?",
+                        "Kompyuter IP manzili nima?",
+                        "Wi-Fi texnologiyasi nimaga xizmat qiladi?",
+                        "Bluetooth texnologiyasi radiusi qanday?",
+                        "Printer qanday qurilma?",
+                        "Skaner (Scanner) qanday qurilma?",
+                        "MS Word da matnni o'rtaga tekislash birikmasi?",
+                        "MS Excelda formulalar qaysi belgi bilan boshlanadi?",
+                        "Excelda kataklar kesishmasi nima deyiladi?",
+                        "Bulutli xotira xizmatiga misol (Cloud Storage)?",
+                        "URL nimaning qisqartmasi?",
+                        "HTTP va HTTPS o'rtasidagi farq nima?",
+                        "Fleshka (USB Flash Drive) qanday xotira turi?",
+                        "Kompyuter sichqonchasining o'ng tugmasi nima ochadi?",
+                        "Dasturni majburiy yopish (Task Manager) birikmasi?",
+                        "F2 tugmasi Windowsda nimaga xizmat qiladi?",
+                        "F5 tugmasi brauzerda nima qiladi?",
+                        "Caps Lock tugmasi nimaga xizmat qiladi?",
+                        "Shift tugmasi nimaga xizmat qiladi?",
+                        "Enter tugmasi vazifasi nima?",
+                        "Kompyuter virusi nima?"
+                    ][i % 50]
+                }`,
+                options: [
+                    ["Protsessor (CPU)", "Operativ xotira (RAM)", "Qattiq disk (HDD)", "Video karta"],
+                    ["RAM (Random Access Memory)", "ROM", "HDD", "SSD"],
+                    ["SSD / HDD", "RAM", "Cache", "Register"],
+                    ["Kiritish (Input) qurilmasi", "Chiqarish (Output) qurilmasi", "Saqlash qurilmasi", "Boshqaruv"],
+                    ["Chiqarish (Output) qurilmasi", "Kiritish qurilmasi", "Saqlash qurilmasi", "Aloqa"],
+                    ["Ctrl + C", "Ctrl + V", "Ctrl + X", "Ctrl + Z"],
+                    ["Ctrl + V", "Ctrl + C", "Ctrl + P", "Ctrl + A"],
+                    ["Ctrl + A", "Ctrl + S", "Ctrl + F", "Ctrl + N"],
+                    ["Ctrl + Z", "Ctrl + Y", "Ctrl + W", "Ctrl + D"],
+                    ["Ctrl + X", "Ctrl + C", "Ctrl + V", "Ctrl + Delete"],
+                    ["Windows, macOS, Linux", "MS Word, Excel", "Google Chrome", "Kaspersky"],
+                    ["Microsoft Word", "Microsoft Excel", "PowerPoint", "Access"],
+                    ["Microsoft Excel", "Microsoft Word", "Photoshop", "Paint"],
+                    ["Microsoft PowerPoint", "WordPad", "Notepad", "Excel"],
+                    ["1024 Bayt", "1000 Bayt", "512 Bayt", "2048 Bayt"],
+                    ["1024 KB", "1000 KB", "100 KB", "500 KB"],
+                    ["1024 MB", "1000 MB", "100 MB", "2048 MB"],
+                    ["Bit", "Bayt", "KiloBit", "Piksel"],
+                    ["8 bit", "2 bit", "10 bit", "16 bit"],
+                    ["Google Chrome, Mozilla Firefox", "Google.com", "Windows 11", "Telegram"],
+                    ["Google, Yandex, Bing", "Chrome, Opera", "Gmail", "Windows"],
+                    ["Antivirus", "Archiver", "Driver", "Browser"],
+                    ["Router (Marshrutizator) / Modem", "Switch", "Hub", "Tuner"],
+                    ["Ona platadagi (Motherboard) ROM chipida", "Qattiq diskda", "Operativka RAMda", "Protsessorda"],
+                    ["SSD tezroq va elektron, HDD mexanik va sekinroq", "HDD tezroq", "Farqi yo'q", "SSD faqat xotira kartasi"],
+                    ["Shift + Delete", "Ctrl + Delete", "Alt + Delete", "Delete"],
+                    ["PrtScn (Print Screen)", "F12", "Ctrl + P", "Pause Break"],
+                    ["Ctrl + Alt + Delete", "Alt + F4", "Shift + Esc", "Win + L"],
+                    ["Hujjatlarni o'zgarmas shaklda saqlash va ko'rish", "Rasm tahrirlash", "Video montaj", "Dastur kodi"],
+                    ["Arxivlangan (siqilgan) fayllar", "Video fayllar", "Tizim fayllari", "Matnli fayllar"],
+                    ["Tarmoqdagi kompyuterning unikal manzili", "Fayl nomi", "Sichqoncha kodi", "Protsessor chastotasi"],
+                    ["Simsiz tarmoq orqali internetga ulanish", "Kabel orqali ulanish", "Matn chop etish", "Ovoz uzatish"],
+                    ["Yaqin masofa (10-100 metr)", "Global masofa", "Butun dunyo", "Faqat 1 metr"],
+                    ["Chiqarish (Output) qurilmasi", "Kiritish qurilmasi", "Saqlash qurilmasi", "Tarmoq"],
+                    ["Kiritish (Input) qurilmasi", "Chiqarish qurilmasi", "Xotira", "Protsessor"],
+                    ["Ctrl + E", "Ctrl + L", "Ctrl + R", "Ctrl + J"],
+                    ["Tenglik (=)", "Plus (+)", "Minus (-)", "Asterisk (*)"],
+                    ["Katakcha (Cell)", "Ustun", "Qator", "Blok"],
+                    ["Google Drive, Telegram Cloud, OneDrive", "RAM", "Flash disk", "CD-ROM"],
+                    ["Uniform Resource Locator", "Universal Radio Link", "United Real Language", "User Read List"],
+                    ["HTTPS xavfsiz (shifrlangan) protokoldir", "HTTP tezroq", "Farqi yo'q", "HTTP faqat mobilda"],
+                    ["Tashqi elektron xotira (Tashqi qurilma)", "Ichki tezkor xotira", "Optik disk", "Virtual xotira"],
+                    ["Kontekst menyuni (A'mollar menyusi)", "Faylni o'chiradi", "Dasturni yopadi", "Nusxa oladi"],
+                    ["Ctrl + Shift + Esc (yoki Ctrl+Alt+Del)", "Alt + F4", "Win + D", "Shift + Tab"],
+                    ["Fayl yoki papka nomini o'zgartirish (Rename)", "O'chirish", "Yangi papka ochish", "Qidirish"],
+                    ["Sahifani yangilash (Refresh)", "Oynani yopish", "Saqlash", "Chop etish"],
+                    ["Katta harflar rejimini yoqish/o'chirish", "Probel tashlash", "Qator tashlash", "O'chirish"],
+                    ["Vaqtinchalik katta harf yozish yoki belgilarni kiritish", "Saqlash", "Bekor qilish", "Chiqish"],
+                    ["Tasdiqlash yoki yangi qatorga o'tish", "O'chirish", "Nusxa olish", "Yashirish"],
+                    ["Zararli dasturiy kod", "Foydali utilita", "Antivirus fayli", "Tizim yangilanishi"]
+                ][i % 50],
+                correct: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0][i % 50]
+            }))
+        ];
+
+        // Fisher-Yates algorithm for options shuffling while preserving correct answer logic
+        function shuffleOptions(questionObj) {
+            let options = [...questionObj.options];
+            let correctAnswerText = options[questionObj.correct];
+            
+            for (let i = options.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [options[i], options[j]] = [options[j], options[i]];
+            }
+
+            let newCorrectIndex = options.indexOf(correctAnswerText);
+            return {
+                ...questionObj,
+                options: options,
+                correct: newCorrectIndex
+            };
+        }
+
+        // Initialize App & Load Saved Settings
+        window.onload = function() {
+            document.getElementById("cfg-token").value = BOT_TOKEN;
+            if (CHAT_ID) {
+                document.getElementById("cfg-chatid").value = CHAT_ID;
+            }
+        };
+
+        function openAdminModal() {
+            document.getElementById("admin-modal").classList.remove("hidden");
+        }
+
+        function closeAdminModal() {
+            document.getElementById("admin-modal").classList.add("hidden");
+        }
+
+        function saveAdminSettings() {
+            const chatIdVal = document.getElementById("cfg-chatid").value.trim();
+            if (!chatIdVal) {
+                alert("Iltimos, Telegram Chat ID raqamingizni kiriting!");
+                return;
+            }
+            CHAT_ID = chatIdVal;
+            localStorage.setItem("quiz_chat_id", CHAT_ID);
+            closeAdminModal();
+            alert("Telegram Chat ID muvaffaqiyatli saqlandi!");
+        }
+
+        function selectCategory(cat) {
+            const fname = document.getElementById("user-firstname").value.trim();
+            const lname = document.getElementById("user-lastname").value.trim();
+
+            if (!fname || !lname) {
+                alert("Iltimos, ism va familiyangizni to'liq kiriting!");
+                return;
+            }
+
+            if (!CHAT_ID) {
+                openAdminModal();
+                alert("Natijalarni Telegram orqali qabul qilish uchun Chat ID raqamingizni saqlang!");
+                return;
+            }
+
+            currentCategory = cat;
+            let rawList = [];
+
+            if (cat === 'all') {
+                rawList = RAW_QUESTIONS;
+            } else {
+                rawList = RAW_QUESTIONS.filter(q => q.category === cat);
+            }
+
+            // Shuffle questions and options
+            questions = rawList.map(q => shuffleOptions(q));
+            userAnswers = {};
+            currentQuestionIdx = 0;
+
+            // Timer setup (20 mins for category, 60 mins for all)
+            timeLeft = cat === 'all' ? 3600 : 1200;
+
+            // Show Quiz UI
+            document.getElementById("screen-welcome").classList.add("hidden");
+            document.getElementById("screen-quiz").classList.remove("hidden");
+            document.getElementById("screen-results").classList.add("hidden");
+
+            // Update Category Badge
+            const badge = document.getElementById("quiz-badge");
+            const catNames = { html: "HTML5", css: "CSS3", bootstrap: "Bootstrap 5", cs: "Kompyuter Savodxonligi", all: "Aralash (200 Test)" };
+            badge.innerText = catNames[cat] || "Test";
+
+            document.getElementById("total-q-num").innerText = questions.length;
+
+            startTimer();
+            renderQuestion();
+        }
+
+        function startTimer() {
+            clearInterval(timerInterval);
+            updateTimerDisplay();
+            timerInterval = setInterval(() => {
+                timeLeft--;
+                updateTimerDisplay();
+                if (timeLeft <= 0) {
+                    clearInterval(timerInterval);
+                    alert("Vaqtingiz tugadi!");
+                    finishQuiz();
+                }
+            }, 1000);
+        }
+
+        function updateTimerDisplay() {
+            const mins = Math.floor(timeLeft / 60);
+            const secs = timeLeft % 60;
+            document.getElementById("timer-display").innerText = `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+        }
+
+        function renderQuestion() {
+            const q = questions[currentQuestionIdx];
+            document.getElementById("current-q-num").innerText = currentQuestionIdx + 1;
+
+            // Progress bar
+            const percent = ((currentQuestionIdx + 1) / questions.length) * 100;
+            document.getElementById("progress-bar").style.width = `${percent}%`;
+
+            // Question Text
+            document.getElementById("question-text").innerText = `${q.id}. ${q.question}`;
+
+            // Options
+            const container = document.getElementById("options-container");
+            container.innerHTML = "";
+
+            q.options.forEach((optText, idx) => {
+                const isSelected = userAnswers[currentQuestionIdx] === idx;
+                const btn = document.createElement("button");
+                btn.className = `option-btn w-full p-4 rounded-2xl text-left font-medium text-sm sm:text-base border transition-all flex items-center justify-between ${
+                    isSelected 
+                    ? 'bg-brand-600/30 border-brand-500 text-white shadow-lg shadow-brand-500/10' 
+                    : 'bg-gray-900/60 border-gray-800 text-gray-300 hover:bg-gray-800 hover:border-gray-700'
+                }`;
+
+                btn.onclick = () => selectOption(idx);
+
+                btn.innerHTML = `
+                    <div class="flex items-center gap-3">
+                        <span class="w-8 h-8 rounded-xl flex items-center justify-center font-bold text-xs ${isSelected ? 'bg-brand-500 text-white' : 'bg-gray-800 text-gray-400'}">
+                            ${String.fromCharCode(65 + idx)}
+                        </span>
+                        <span>${optText}</span>
+                    </div>
+                    ${isSelected ? '<i class="fa-solid fa-circle-check text-brand-400 text-lg"></i>' : ''}
+                `;
+                container.appendChild(btn);
+            });
+
+            // Nav Buttons visibility
+            document.getElementById("prev-btn").disabled = currentQuestionIdx === 0;
+
+            if (currentQuestionIdx === questions.length - 1) {
+                document.getElementById("next-btn").classList.add("hidden");
+                document.getElementById("finish-btn").classList.remove("hidden");
+            } else {
+                document.getElementById("next-btn").classList.remove("hidden");
+                document.getElementById("finish-btn").classList.add("hidden");
+            }
+        }
+
+        function selectOption(optIdx) {
+            userAnswers[currentQuestionIdx] = optIdx;
+            renderQuestion();
+        }
+
+        function navigateQuestion(step) {
+            currentQuestionIdx += step;
+            if (currentQuestionIdx < 0) currentQuestionIdx = 0;
+            if (currentQuestionIdx >= questions.length) currentQuestionIdx = questions.length - 1;
+            renderQuestion();
+        }
+
+        function confirmFinishQuiz() {
+            const answeredCount = Object.keys(userAnswers).length;
+            if (answeredCount < questions.length) {
+                if (!confirm(`Siz ${questions.length} ta savoldan ${answeredCount} tasiga javob berdingiz. Testni yakunlashni xohlaysizmi?`)) {
+                    return;
+                }
+            }
+            finishQuiz();
+        }
+
+        function finishQuiz() {
+            clearInterval(timerInterval);
+
+            let correctCount = 0;
+            questions.forEach((q, idx) => {
+                if (userAnswers[idx] === q.correct) {
+                    correctCount++;
+                }
+            });
+
+            const total = questions.length;
+            const wrongCount = total - correctCount;
+            const percentage = Math.round((correctCount / total) * 100);
+
+            const fname = document.getElementById("user-firstname").value.trim();
+            const lname = document.getElementById("user-lastname").value.trim();
+            const fullName = `${fname} ${lname}`;
+
+            // Hide Quiz, Show Results
+            document.getElementById("screen-quiz").classList.add("hidden");
+            document.getElementById("screen-results").classList.remove("hidden");
+
+            document.getElementById("result-user-fullname").innerText = fullName;
+            document.getElementById("res-total").innerText = total;
+            document.getElementById("res-correct").innerText = correctCount;
+            document.getElementById("res-wrong").innerText = wrongCount;
+            document.getElementById("res-percent").innerText = `${percentage}%`;
+
+            // Trigger Confetti effect on good results
+            if (percentage >= 60) {
+                confetti({
+                    particleCount: 100,
+                    spread: 70,
+                    origin: { y: 0.6 }
+                });
+            }
+
+            // Send Results to Telegram
+            sendToTelegram(fullName, total, correctCount, wrongCount, percentage);
+        }
+
+        function sendToTelegram(name, total, correct, wrong, percent) {
+            const statusElem = document.getElementById("telegram-status");
+
+            if (!CHAT_ID) {
+                statusElem.className = "inline-flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-semibold bg-rose-500/10 text-rose-400 border border-rose-500/20";
+                statusElem.innerHTML = `<i class="fa-solid fa-triangle-exclamation"></i> Chat ID belgilanmagan. Natija yuborilmadi.`;
+                return;
+            }
+
+            const catNames = { html: "HTML5", css: "CSS3", bootstrap: "Bootstrap 5", cs: "Kompyuter Savodxonligi", all: "Aralash (200 Test)" };
+            const categoryTitle = catNames[currentCategory] || "Test";
+
+            const message = `
+🎓 <b>YANGI TEST NATIJASI!</b>
+
+👤 <b>Talaba:</b> ${name}
+📚 <b>Yo'nalish:</b> ${categoryTitle}
+📊 <b>Jami savollar:</b> ${total} ta
+✅ <b>To'g'ri javoblar:</b> ${correct} ta
+❌ <b>Xatolar:</b> ${wrong} ta
+📈 <b>Natija:</b> ${percent}%
+
+🕒 <b>Sana:</b> ${new Date().toLocaleString('uz-UZ')}
+            `;
+
+            fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    chat_id: CHAT_ID,
+                    text: message,
+                    parse_mode: 'HTML'
+                })
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.ok) {
+                    statusElem.className = "inline-flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20";
+                    statusElem.innerHTML = `<i class="fa-solid fa-circle-check"></i> Natijalar Telegramga muvaffaqiyatli yuborildi!`;
+                } else {
+                    throw new Error(data.description || "Noma'lum xatolik");
+                }
+            })
+            .catch(err => {
+                statusElem.className = "inline-flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-semibold bg-rose-500/10 text-rose-400 border border-rose-500/20";
+                statusElem.innerHTML = `<i class="fa-solid fa-triangle-exclamation"></i> Telegramga yuborishda xatolik!`;
+            });
+        }
+
+        function reviewAnswers() {
+            const container = document.getElementById("review-container");
+            const list = document.getElementById("review-list");
+
+            container.classList.toggle("hidden");
+            list.innerHTML = "";
+
+            questions.forEach((q, idx) => {
+                const userAnsIdx = userAnswers[idx];
+                const isCorrect = userAnsIdx === q.correct;
+
+                const card = document.createElement("div");
+                card.className = `p-5 rounded-2xl border ${isCorrect ? 'bg-emerald-950/20 border-emerald-800/50' : 'bg-rose-950/20 border-rose-800/50'} space-y-3`;
+
+                let optionsHtml = '';
+                q.options.forEach((opt, oIdx) => {
+                    let optStyle = "text-gray-400";
+                    let icon = "";
+
+                    if (oIdx === q.correct) {
+                        optStyle = "text-emerald-400 font-bold";
+                        icon = '<i class="fa-solid fa-check text-emerald-400 ml-2"></i> (To\'g'ri javob)';
+                    }
+                    if (userAnsIdx === oIdx && !isCorrect) {
+                        optStyle = "text-rose-400 font-bold line-through";
+                        icon = '<i class="fa-solid fa-xmark text-rose-400 ml-2"></i> (Sizning xato javobingiz)';
+                    }
+
+                    optionsHtml += `<div class="text-xs ${optStyle} flex items-center">${String.fromCharCode(65 + oIdx)}) ${opt} ${icon}</div>`;
+                });
+
+                card.innerHTML = `
+                    <div class="flex items-start justify-between gap-4">
+                        <h4 class="text-sm font-semibold text-white">${idx + 1}. ${q.question}</h4>
+                        <span class="px-2.5 py-1 rounded-lg text-[10px] font-bold uppercase ${isCorrect ? 'bg-emerald-500/20 text-emerald-400' : 'bg-rose-500/20 text-rose-400'}">
+                            ${isCorrect ? "To'g'ri" : "Xato"}
+                        </span>
+                    </div>
+                    <div class="space-y-1 pl-2 border-l border-gray-800">${optionsHtml}</div>
+                `;
+
+                list.appendChild(card);
+            });
+        }
+
+        function goToHome() {
+            clearInterval(timerInterval);
+            document.getElementById("screen-welcome").classList.remove("hidden");
+            document.getElementById("screen-quiz").classList.add("hidden");
+            document.getElementById("screen-results").classList.add("hidden");
+            document.getElementById("review-container").classList.add("hidden");
+        }
+    </script>
+</body>
+</html>
